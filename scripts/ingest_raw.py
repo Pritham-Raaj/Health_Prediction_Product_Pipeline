@@ -76,7 +76,7 @@ def main():
         # Set context
         execute_sql(cursor, f"USE WAREHOUSE {SNOWFLAKE_WAREHOUSE};", "Set warehouse")
         execute_sql(cursor, f"USE DATABASE {SNOWFLAKE_DATABASE};", "Set database")
-        execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_RAW_SCHEMA};", "Set schema")
+        execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_SCHEMA};", "Set schema")
         
         # Create stage (access role will own it)
         create_stage_sql = f"""
