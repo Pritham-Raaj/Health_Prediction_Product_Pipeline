@@ -22,7 +22,7 @@ SNOWFLAKE_PASSWORD = os.environ.get("SNOWFLAKE_PASSWORD")
 SNOWFLAKE_ROLE = os.environ.get("SNOWFLAKE_ROLE", "access")
 SNOWFLAKE_WAREHOUSE = os.environ.get("SNOWFLAKE_WAREHOUSE", "cal_wh")
 SNOWFLAKE_DATABASE = os.environ.get("SNOWFLAKE_DATABASE", "healthdata")
-SNOWFLAKE_SCHEMA = os.environ.get("SNOWFLAKE_SCHEMA", "raw")
+SNOWFLAKE_SCHEMA = os.environ.get("SNOWFLAKE_RAW_SCHEMA", "raw")
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 S3_BUCKET = os.environ.get("S3_BUCKET", "pritham-heartdata")
@@ -76,11 +76,11 @@ def main():
         # Set context
         execute_sql(cursor, f"USE WAREHOUSE {SNOWFLAKE_WAREHOUSE};", "Set warehouse")
         execute_sql(cursor, f"USE DATABASE {SNOWFLAKE_DATABASE};", "Set database")
-        execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_SCHEMA};", "Set schema")
+        execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_RAW_SCHEMA};", "Set schema")
         
         # Create stage (access role will own it)
         create_stage_sql = f"""
-        CREATE STAGE healthstage
+        CREATE STAGE IF NOT EXIXTS healthstage
             URL = 's3://{S3_BUCKET}'
             CREDENTIALS = (
                 AWS_KEY_ID = '{AWS_ACCESS_KEY_ID}'
@@ -91,7 +91,7 @@ def main():
         
         # Create table (access role will own it)
         create_table_sql = """
-        CREATE TABLE raw_health (
+        CREATE OR REPLACE TABLE raw_health (
             id INTEGER,
             age INTEGER,
             sex VARCHAR(10),
