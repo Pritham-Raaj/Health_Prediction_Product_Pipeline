@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+dbt_venv/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/*.log
+*.log
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# MLflow
+mlruns/
+mlflow_tracking/mlruns/
+
+# Monitoring
+ml_service/monitoring/reference_data.csv
+
+# Temporary files
+*.tmp
+tmp/
+temp/
+
+# Docker
+*.tar
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Credentials (IMPORTANT - Never commit these!)
+credentials.json
+service-account.json
+*.pem
+*.key
+*.crt
+
+# Model artifacts (Optional - commit or ignore based on your workflow)
+# Uncomment next line if you want to build models during deployment
+# ml_service/models/*.pkl
+# ml_service/models/*.json

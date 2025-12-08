@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# DBT
+health_dbt/
+dbt_venv/
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs (will be created in container)
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Testing
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # ML Service API - Main Application
+  ml-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: heart-disease-ml-service
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Heart Disease Prediction API
+      - APP_VERSION=1.0.0
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+      # Optional features
+      - ENABLE_SHAP=true
+      # MLflow tracking (optional but recommended)
+      - MLFLOW_TRACKING_URI=/app/mlflow_tracking
+    volumes:
+      # Model artifacts
+      - ./ml_service/models:/app/ml_service/models
+      # Logs directory
+      - ./logs:/app/logs
+      # MLflow data (optional)
+      - ./mlflow_tracking:/app/mlflow_tracking
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ml-network
+
+networks:
+  ml-network:
+    driver: bridge

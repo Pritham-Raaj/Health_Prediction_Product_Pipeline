@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/prith/vr_env/Health_Prediction/mlflow_tracking/892119465647405118/dd49d95b8b2442998861d68b76255627/artifacts
+end_time: 1764836960222
+entry_point_name: ''
+experiment_id: '892119465647405118'
+lifecycle_stage: active
+run_id: dd49d95b8b2442998861d68b76255627
+run_name: KNN_baseline
+run_uuid: dd49d95b8b2442998861d68b76255627
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764836952555
+status: 3
+tags: []
+user_id: prith

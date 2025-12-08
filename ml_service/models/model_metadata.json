@@ -1,0 +1,26 @@
+{
+  "model_version": "1.0.0",
+  "training_date": "2025-12-04T08:29:37.145659",
+  "metrics": {
+    "accuracy": 0.8040540540540541,
+    "precision": 0.8157894736842105,
+    "recall": 0.8051948051948052,
+    "f1_score": 0.8104575163398693,
+    "roc_auc": 0.8895189317724529
+  },
+  "feature_names": [
+    "AGE",
+    "CHOL",
+    "MAX_HEARTRATE",
+    "OLDPEAK",
+    "SEX_LABEL",
+    "LOCATION_LABEL",
+    "CHESTPAINTYPE_LABEL",
+    "RESTINGBP_LABEL",
+    "FASTINGBS_LABEL",
+    "RESTECG_LABEL",
+    "EXERCISE_CHESTPAIN_LABEL"
+  ],
+  "training_samples": 591,
+  "test_samples": 148
+}

@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1764836977096
+current_stage: None
+description: null
+last_updated_timestamp: 1764836977096
+name: heart_disease_predictor
+run_id: afb5726613c549d39a257b8fcf774ed2
+run_link: null
+source: file:///C:/Users/prith/vr_env/Health_Prediction/mlflow_tracking/892119465647405118/afb5726613c549d39a257b8fcf774ed2/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/prith/vr_env/Health_Prediction/mlflow_tracking/892119465647405118/afb5726613c549d39a257b8fcf774ed2/artifacts/model
+user_id: null
+version: 1

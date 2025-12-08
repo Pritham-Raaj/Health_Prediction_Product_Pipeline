@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/prith/vr_env/Health_Prediction/mlflow_tracking/892119465647405118/887618e2e75241fb97b18c197630afa7/artifacts
+end_time: 1764836952529
+entry_point_name: ''
+experiment_id: '892119465647405118'
+lifecycle_stage: active
+run_id: 887618e2e75241fb97b18c197630afa7
+run_name: Random Forest_baseline
+run_uuid: 887618e2e75241fb97b18c197630afa7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764836944276
+status: 3
+tags: []
+user_id: prith

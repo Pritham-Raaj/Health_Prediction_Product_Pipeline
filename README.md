@@ -1,1 +1,425 @@
-# Health_Prediction
+# Heart Disease Prediction: End-to-End ML Pipeline
+
+> **Showcasing proficiency in ETL pipelines, model training, and production deployment**
+
+A production-ready machine learning system that demonstrates modern data engineering and MLOps practices through heart disease risk prediction.
+
+## 🎯 Project Overview
+
+This project demonstrates a **complete ML lifecycle**:
+
+1. **ETL Pipeline** - DBT + Snowflake for data transformation
+2. **Model Training** - Scikit-learn with MLflow experiment tracking
+3. **Production Deployment** - FastAPI REST API with Docker containerization
+
+### Key Technologies
+
+| Component | Technology |
+|-----------|-----------|
+| **Data Warehouse** | Snowflake |
+| **ETL/Transform** | DBT (Data Build Tool) |
+| **ML Framework** | Scikit-learn |
+| **Experiment Tracking** | MLflow |
+| **API Framework** | FastAPI |
+| **Containerization** | Docker |
+| **Production** | Render (Cloud Platform) |
+
+---
+
+## 📊 Architecture
+
+```
+┌─────────────────┐
+│   Snowflake     │  ← Raw Data Storage
+│  (Data Warehouse)│
+└────────┬────────┘
+         │
+    ┌────▼────┐
+    │   DBT   │  ← ETL: Transform & Feature Engineering
+    └────┬────┘
+         │
+    ┌────▼────────────┐
+    │ ML Training     │  ← Model Training with MLflow
+    │ (scikit-learn)  │
+    └────┬────────────┘
+         │
+    ┌────▼──────────┐
+    │ Model Artifacts│  ← Saved models (pkl files)
+    └────┬──────────┘
+         │
+    ┌────▼────────┐
+    │   FastAPI   │  ← REST API for predictions
+    └────┬────────┘
+         │
+    ┌────▼────────┐
+    │   Docker    │  ← Containerized deployment
+    └────┬────────┘
+         │
+    ┌────▼────────┐
+    │   Render    │  ← Cloud hosting
+    └─────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- Snowflake account (for ETL pipeline)
+- Docker (optional, for containerization)
+
+### 1. Clone and Setup
+
+```bash
+git clone <repository-url>
+cd Health_Prediction
+```
+
+### 2. Run ETL Pipeline (DBT + Snowflake)
+
+```bash
+# Navigate to DBT project
+cd health_dbt
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your Snowflake credentials
+
+# Run DBT transformations
+dbt deps
+dbt run
+dbt test
+```
+
+This creates:
+- `analytics.heart_curated` - Cleaned dataset (739 records)
+- `analytics.heart_features` - Engineered features for ML
+
+### 3. Train ML Model
+
+```bash
+# From project root
+cd ..
+
+# Install dependencies
+pip install -r ml_service/requirements.txt
+
+# Train model with MLflow tracking
+python scripts/train_model_mlflow.py
+```
+
+**Output:**
+- Model artifacts saved to `ml_service/models/`
+- Experiment metrics tracked in `mlflow_tracking/`
+- Best model: Logistic Regression (80.41% accuracy)
+
+### 4. Start ML Service
+
+**Option A: Using Quickstart Script (Easiest)**
+```bash
+# Windows
+.\quickstart.bat
+
+# Linux/Mac
+./quickstart.sh
+```
+
+**Option B: Manual Start**
+```bash
+cd ml_service
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Option C: Docker**
+```bash
+docker-compose up --build
+```
+
+### 5. Test the API
+
+Access the interactive documentation:
+- **Swagger UI**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+
+**Make a prediction (PowerShell):**
+```powershell
+$body = '{"age": 55, "sex": 1, "chest_pain_type": 2, "resting_bp": 140, "cholesterol": 250, "fasting_bs": 1, "resting_ecg": 0, "max_heart_rate": 150, "exercise_angina": 1, "oldpeak": 2.5, "location": 0}'
+Invoke-RestMethod -Uri "http://localhost:8000/predict" -Method POST -Body $body -ContentType "application/json"
+```
+
+**Response:**
+```json
+{
+  "prediction": 1,
+  "probability": 0.9359,
+  "risk_level": "High",
+  "model_version": "1.0.0"
+}
+```
+
+---
+
+## 📁 Project Structure
+
+```
+Health_Prediction/
+├── health_dbt/              # DBT project for ETL
+│   ├── models/
+│   │   ├── curated/         # Cleaned data models
+│   │   └── features/        # Feature engineering
+│   ├── dbt_project.yml
+│   └── profiles.yml
+├── ml_service/              # Production ML Service
+│   ├── app/
+│   │   ├── main.py          # FastAPI application
+│   │   ├── model_service.py # Model inference logic
+│   │   └── schemas.py       # API request/response models
+│   ├── config/
+│   │   └── settings.py      # Configuration management
+│   ├── models/              # Trained model artifacts
+│   │   ├── heart_disease_model.pkl
+│   │   ├── scaler.pkl
+│   │   └── feature_names.json
+│   └── requirements.txt
+├── scripts/
+│   └── train_model_mlflow.py  # Model training script
+├── mlflow_tracking/           # MLflow experiment data
+├── docker-compose.yml         # Docker orchestration
+├── Dockerfile                 # Container definition
+└── README.md
+```
+
+---
+
+## 🎓 Technical Highlights
+
+### 1. ETL Pipeline (DBT + Snowflake)
+
+**Data Transformation:**
+```sql
+-- Example: heart_curated.sql
+WITH cleaned_data AS (
+    SELECT
+        AGE,
+        SEX,
+        LOCATION,
+        CHOL,
+        RESTINGBP,
+        ...
+    FROM {{ source('raw', 'heart_data') }}
+    WHERE AGE > 0
+      AND CHOL > 0
+)
+SELECT * FROM cleaned_data
+```
+
+**Benefits:**
+- Version-controlled SQL transformations
+- Data quality tests
+- Incremental processing
+- Documentation generation
+
+### 2. Model Training with MLflow
+
+**Tracks:**
+- Model hyperparameters
+- Performance metrics (accuracy, precision, recall, F1, ROC-AUC)
+- Training artifacts
+- Model versioning
+
+**View experiments:**
+```bash
+cd mlflow_tracking
+mlflow ui
+# Open http://localhost:5000
+```
+
+### 3. Production API (FastAPI)
+
+**Core Endpoints:**
+- `POST /predict` - Single patient prediction
+- `POST /predict/batch` - Multiple predictions
+- `POST /explain` - SHAP-based model explanations
+- `GET /health` - Service health check
+
+**Features:**
+- Input validation with Pydantic
+- Automatic API documentation
+- Error handling
+- Structured logging
+- Health monitoring
+
+### 4. Containerization & Deployment
+
+**Docker Features:**
+- Multi-stage builds for optimized size
+- Health checks
+- Volume mounts for persistence
+- Environment-based configuration
+
+**Deploy to Render:**
+```bash
+git push origin main
+# Auto-deploys via GitHub integration
+```
+
+---
+
+## 📊 Model Performance
+
+| Metric | Value |
+|--------|-------|
+| **Algorithm** | Logistic Regression |
+| **Accuracy** | 80.41% |
+| **Precision** | 81.58% |
+| **Recall** | 80.52% |
+| **F1 Score** | 81.05% |
+| **ROC-AUC** | 88.95% |
+
+**Dataset:**
+- 739 patient records
+- 11 features (age, sex, cholesterol, blood pressure, etc.)
+- Binary classification (heart disease: yes/no)
+- Balanced classes (51.7% positive)
+
+---
+
+## 🔧 Configuration
+
+### Optional Features
+
+Edit `ml_service/config/settings.py`:
+
+```python
+# Model Explainability (SHAP)
+ENABLE_SHAP: bool = True  # Set False for faster startup
+```
+
+**Simple and focused:**
+- Core features: Prediction API + SHAP explanations
+- No complex monitoring dependencies
+- Fast startup, easy to demo
+
+---
+
+## 🧪 API Examples
+
+### Health Check
+```bash
+curl http://localhost:8000/health
+```
+
+### Prediction (High Risk)
+```json
+{
+  "age": 65,
+  "sex": 1,
+  "chest_pain_type": 3,
+  "resting_bp": 160,
+  "cholesterol": 280,
+  "fasting_bs": 1,
+  "resting_ecg": 1,
+  "max_heart_rate": 120,
+  "exercise_angina": 1,
+  "oldpeak": 3.0,
+  "location": 0
+}
+```
+
+### Prediction (Low Risk)
+```json
+{
+  "age": 30,
+  "sex": 0,
+  "chest_pain_type": 0,
+  "resting_bp": 110,
+  "cholesterol": 160,
+  "fasting_bs": 0,
+  "resting_ecg": 0,
+  "max_heart_rate": 180,
+  "exercise_angina": 0,
+  "oldpeak": 0.0,
+  "location": 0
+}
+```
+
+---
+
+## 📚 Documentation
+
+- **API Docs**: http://localhost:8000/docs (Swagger UI)
+- **DBT Docs**: Run `dbt docs generate && dbt docs serve`
+- **MLflow UI**: Run `mlflow ui` from `mlflow_tracking/` directory
+
+---
+
+## 🎯 Skills Demonstrated
+
+✅ **Data Engineering**
+- ETL pipeline design with DBT
+- Data warehouse integration (Snowflake)
+- Data quality testing
+- Feature engineering
+
+✅ **Machine Learning**
+- Model training and hyperparameter tuning
+- Experiment tracking (MLflow)
+- Model evaluation and selection
+- Feature importance analysis
+
+✅ **MLOps & Deployment**
+- REST API development (FastAPI)
+- Model serving and inference
+- Docker containerization
+- Cloud deployment (Render)
+- CI/CD integration
+- Health monitoring
+
+✅ **Software Engineering**
+- Clean code architecture
+- API design and documentation
+- Error handling and validation
+- Logging and monitoring
+- Version control (Git)
+
+---
+
+## 🔄 Development Workflow
+
+1. **Data Updates**: Run `dbt run` to refresh features
+2. **Model Retraining**: Run `python scripts/train_model_mlflow.py`
+3. **API Testing**: Use `/docs` endpoint for interactive testing
+4. **Deployment**: Push to GitHub → Auto-deploy to Render
+
+---
+
+## 📈 Future Enhancements
+
+- [ ] Add authentication/authorization
+- [ ] Implement model versioning API
+- [ ] Add A/B testing capabilities
+- [ ] Set up monitoring dashboards
+- [ ] Add more ML algorithms
+- [ ] Implement batch prediction scheduler
+
+---
+
+## 🤝 Contributing
+
+This is a portfolio project. Feel free to fork and adapt for your own use!
+
+---
+
+## 📝 License
+
+MIT License - See LICENSE file for details
+
+---
+
+## 🙏 Acknowledgments
+
+- Dataset: UCI Machine Learning Repository
+- Frameworks: FastAPI, MLflow, DBT
+- Cloud: Snowflake, Render

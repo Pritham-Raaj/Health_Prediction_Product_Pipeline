@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/prith/vr_env/Health_Prediction/mlflow_tracking/892119465647405118/afb5726613c549d39a257b8fcf774ed2/artifacts
+end_time: 1764836977129
+entry_point_name: ''
+experiment_id: '892119465647405118'
+lifecycle_stage: active
+run_id: afb5726613c549d39a257b8fcf774ed2
+run_name: Logistic Regression_tuned
+run_uuid: afb5726613c549d39a257b8fcf774ed2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764836960254
+status: 3
+tags: []
+user_id: prith

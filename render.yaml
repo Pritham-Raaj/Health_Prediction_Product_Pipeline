@@ -1,0 +1,24 @@
+services:
+  # Heart Disease ML API Service
+  - type: web
+    name: heart-disease-ml-api
+    env: docker
+    region: oregon
+    plan: starter
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: APP_NAME
+        value: Heart Disease Prediction API
+      - key: APP_VERSION
+        value: 1.0.0
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PORT
+        value: 8000
+      - key : ENABLE_SHAP
+        value : true

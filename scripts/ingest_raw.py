@@ -78,20 +78,20 @@ def main():
         execute_sql(cursor, f"USE DATABASE {SNOWFLAKE_DATABASE};", "Set database")
         execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_SCHEMA};", "Set schema")
         
-        # Create stage (access role will own it)
+        # Create stage
         create_stage_sql = f"""
-        CREATE STAGE healthstage
+        CREATE STAGE IF NOT EXISTS healthstage
             URL = 's3://{S3_BUCKET}'
             CREDENTIALS = (
                 AWS_KEY_ID = '{AWS_ACCESS_KEY_ID}'
                 AWS_SECRET_KEY = '{AWS_SECRET_ACCESS_KEY}'
             );
         """
-        execute_sql(cursor, create_stage_sql, "Create S3 stage")
+        execute_sql(cursor, create_stage_sql, "Create/verify S3 stage")
         
-        # Create table (access role will own it)
+        # Create or replace table
         create_table_sql = """
-        CREATE TABLE raw_health (
+        CREATE OR REPLACE TABLE raw_health (
             id INTEGER,
             age INTEGER,
             sex VARCHAR(10),
@@ -111,7 +111,7 @@ def main():
         )
         CLUSTER BY (dataset, num);
         """
-        execute_sql(cursor, create_table_sql, "Create raw_health table")
+        execute_sql(cursor, create_table_sql, "Create/replace raw_health table")
         
         # Copy data from S3
         copy_sql = f"""

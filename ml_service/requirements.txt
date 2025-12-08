@@ -1,0 +1,65 @@
+# =============================================================================
+# CORE DEPENDENCIES (Required for basic functionality)
+# =============================================================================
+
+# FastAPI and Web Framework
+fastapi==0.115.5
+uvicorn[standard]==0.34.0
+pydantic==2.10.3
+python-multipart==0.0.20
+
+# Machine Learning
+scikit-learn==1.7.2
+pandas==2.3.3
+numpy==2.1.3
+joblib==1.5.2
+
+# Data Validation
+pydantic-settings==2.7.0
+
+# Logging
+loguru==0.7.3
+
+# Utilities
+pytz==2025.2
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.1
+
+# =============================================================================
+# RECOMMENDED DEPENDENCIES (For full feature set)
+# =============================================================================
+
+# Model Explainability (OPTIONAL - for SHAP explanations)
+# Set ENABLE_SHAP=True in settings to use
+shap==0.49.1
+
+# Experiment Tracking (OPTIONAL - for MLflow tracking)
+# Highly recommended for tracking model experiments
+mlflow==2.19.0
+
+# =============================================================================
+# ETL & DATA WAREHOUSE (Required for data pipeline)
+# =============================================================================
+
+# Snowflake Connection (Required for DBT and data access)
+snowflake-connector-python==4.1.0
+
+# =============================================================================
+# OPTIONAL DEPENDENCIES (For advanced features)
+# =============================================================================
+
+# Monitoring and Drift Detection (OPTIONAL)
+# Set ENABLE_MONITORING=True in settings to use
+# Note: scipy is required by scikit-learn, so drift detection uses scipy.stats
+# evidently>=0.7.0  # OPTIONAL: Uncomment if you want full Evidently AI features
+
+# Metrics Collection (OPTIONAL - for Prometheus)
+# prometheus-client==0.21.0  # OPTIONAL: Uncomment if using Prometheus
+
+# =============================================================================
+# DEVELOPMENT & TESTING
+# =============================================================================
+
+# Testing
+pytest==8.4.0
+httpx==0.28.1
