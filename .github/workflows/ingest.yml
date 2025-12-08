@@ -2,8 +2,6 @@ name: ingest-raw-data
 
 on:
   workflow_dispatch:      # manual trigger
-  schedule:
-    - cron: "0 3 * * *"   # nightly at 03:00 UTC
 
 jobs:
   ingest:
@@ -28,7 +26,8 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          SNOWFLAKE_RAW_SCHEMA: ${{ secrets.SNOWFLAKE_RAW_SCHEMA }}
+          SNOWFLAKE_ANALYTICS_SCHEMA: ${{ secrets.SNOWFLAKE_ANALYTICS_SCHEMA }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
