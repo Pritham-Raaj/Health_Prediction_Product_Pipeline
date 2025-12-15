@@ -1,6 +1,6 @@
 """
-Train heart disease prediction model with MLflow experiment tracking
-Run this script to train the model and save artifacts for the ML service
+Trains heart disease prediction model with MLflow experiment tracking
+This script trains the model and saves artifacts for the ML service
 """
 import os
 import sys
@@ -11,8 +11,8 @@ from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 import snowflake.connector
+import joblib
 
-# ML libraries
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
@@ -33,10 +33,7 @@ import mlflow
 import mlflow.sklearn
 from mlflow.models.signature import infer_signature
 
-# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-
-# Load environment variables
 env_path = Path(__file__).parent.parent / '.env'
 load_dotenv(env_path)
 
@@ -49,7 +46,7 @@ class ModelTrainer:
         self.mlflow_tracking_uri = Path(__file__).parent.parent / "mlflow_tracking"
         self.mlflow_tracking_uri.mkdir(exist_ok=True)
 
-        # Set MLflow tracking URI (use forward slashes for Windows compatibility)
+        #MLflow tracking URI 
         tracking_uri = str(self.mlflow_tracking_uri.absolute()).replace('\\', '/')
         mlflow.set_tracking_uri(f"file:///{tracking_uri}")
         mlflow.set_experiment(experiment_name)
@@ -62,7 +59,7 @@ class ModelTrainer:
         self.feature_names = None
 
     def load_data_from_snowflake(self):
-        """Load training data from Snowflake"""
+        """Loads training data from Snowflake"""
         print("Connecting to Snowflake...")
 
         conn = snowflake.connector.connect(
@@ -87,14 +84,14 @@ class ModelTrainer:
         """Prepare data for training"""
         print("Preparing data...")
 
-        # Split features and target
+        # features and target split
         X = df.drop(columns=["RESULT"])
         y = df["RESULT"]
 
         self.feature_names = X.columns.tolist()
         print(f"Features: {self.feature_names}")
 
-        # Scale features
+        # Scaling features
         self.scaler = StandardScaler()
         X_scaled = self.scaler.fit_transform(X)
 
@@ -122,36 +119,23 @@ class ModelTrainer:
 
         for name, model in models.items():
             with mlflow.start_run(run_name=f"{name}_baseline"):
+                #trains model, makes predictions and logs all the details
                 print(f"\nTraining {name}...")
-
-                # Train model
                 model.fit(self.X_train, self.y_train)
-
-                # Make predictions
                 y_pred = model.predict(self.X_test)
                 y_pred_proba = model.predict_proba(self.X_test)[:, 1] if hasattr(model, 'predict_proba') else None
-
-                # Calculate metrics
                 metrics = self.calculate_metrics(y_pred, y_pred_proba)
-
-                # Log parameters
                 mlflow.log_params({
                     "model_type": name,
                     "random_state": 42 if hasattr(model, 'random_state') else None
                 })
-
-                # Log metrics
                 mlflow.log_metrics(metrics)
-
-                # Log model
                 signature = infer_signature(self.X_train, model.predict(self.X_train))
                 mlflow.sklearn.log_model(model, "model", signature=signature)
-
                 results[name] = {
                     'model': model,
                     'metrics': metrics
                 }
-
                 print(f"{name} - Accuracy: {metrics['accuracy']:.4f}")
 
         return results
@@ -162,7 +146,7 @@ class ModelTrainer:
         print(f"Tuning {best_model_name}...")
         print("=" * 50)
 
-        # Define parameter grids
+        #parameter grids
         param_grids = {
             'Logistic Regression': {
                 'C': np.logspace(-1, 1, 10),
@@ -182,7 +166,7 @@ class ModelTrainer:
         param_grid = param_grids.get(best_model_name, {})
 
         with mlflow.start_run(run_name=f"{best_model_name}_tuned"):
-            # Perform randomized search
+            #Randomized search
             random_search = RandomizedSearchCV(
                 estimator=model,
                 param_distributions=param_grid,
@@ -195,35 +179,21 @@ class ModelTrainer:
 
             random_search.fit(self.X_train, self.y_train)
 
-            # Get best model
+            # Gets best model and prediction
             best_model = random_search.best_estimator_
-
-            # Make predictions
             y_pred = best_model.predict(self.X_test)
             y_pred_proba = best_model.predict_proba(self.X_test)[:, 1]
-
-            # Calculate metrics
             metrics = self.calculate_metrics(y_pred, y_pred_proba)
-
-            # Log parameters
             mlflow.log_params({
                 "model_type": best_model_name,
                 **random_search.best_params_
             })
-
-            # Log metrics
             mlflow.log_metrics(metrics)
             mlflow.log_metric("cv_best_score", random_search.best_score_)
-
-            # Log classification report
             report = classification_report(self.y_test, y_pred)
             mlflow.log_text(report, "classification_report.txt")
-
-            # Log confusion matrix
             cm = confusion_matrix(self.y_test, y_pred)
             mlflow.log_text(str(cm), "confusion_matrix.txt")
-
-            # Log model
             signature = infer_signature(self.X_train, best_model.predict(self.X_train))
             mlflow.sklearn.log_model(
                 best_model,
@@ -256,28 +226,18 @@ class ModelTrainer:
         print("\n" + "=" * 50)
         print("Saving model artifacts...")
         print("=" * 50)
-
         models_dir = Path(__file__).parent.parent / "ml_service" / "models"
         models_dir.mkdir(exist_ok=True, parents=True)
-
-        # Save model
-        import joblib
         model_path = models_dir / "heart_disease_model.pkl"
         joblib.dump(model, model_path)
         print(f"Model saved to: {model_path}")
-
-        # Save scaler
         scaler_path = models_dir / "scaler.pkl"
         joblib.dump(self.scaler, scaler_path)
         print(f"Scaler saved to: {scaler_path}")
-
-        # Save feature names
         feature_names_path = models_dir / "feature_names.json"
         with open(feature_names_path, 'w') as f:
             json.dump(self.feature_names, f)
         print(f"Feature names saved to: {feature_names_path}")
-
-        # Save metadata
         metadata = {
             "model_version": "1.0.0",
             "training_date": datetime.now().isoformat(),
@@ -298,7 +258,7 @@ class ModelTrainer:
         print("Saving reference data for drift detection...")
         print("=" * 50)
 
-        # Use test set as reference data
+        # Uses test set as reference data
         reference_df = pd.DataFrame(
             self.X_test,
             columns=self.feature_names
@@ -316,29 +276,17 @@ class ModelTrainer:
         print("=" * 50)
         print("Heart Disease Prediction Model Training")
         print("=" * 50)
-
-        # Load data
         df = self.load_data_from_snowflake()
-
-        # Prepare data
         self.prepare_data(df)
-
-        # Train baseline models
         results = self.train_baseline_models()
-
-        # Find best model
         best_model_name = max(results, key=lambda k: results[k]['metrics']['accuracy'])
         best_model = results[best_model_name]['model']
-
         print(f"\nBest baseline model: {best_model_name}")
 
-        # Tune best model
+        # Tunes best model
         tuned_model, metrics = self.tune_best_model(best_model_name, best_model)
-
-        # Save artifacts
         self.save_model_artifacts(tuned_model, metrics)
 
-        # Save reference data
         self.save_reference_data()
 
         print("\n" + "=" * 50)
