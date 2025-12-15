@@ -10,12 +10,12 @@ from pathlib import Path
 import snowflake.connector
 from dotenv import load_dotenv
 
-# Try to load .env if running locally (won't exist in GitHub Actions)
+#load .env if running locally 
 env_path = Path(__file__).resolve().parent.parent / ".env"
 if env_path.exists():
     load_dotenv(env_path)
 
-# Get environment variables (from .env locally or GitHub Actions secrets)
+#Environment variables 
 SNOWFLAKE_ACCOUNT = os.environ.get("SNOWFLAKE_ACCOUNT")
 SNOWFLAKE_USER = os.environ.get("SNOWFLAKE_USER")
 SNOWFLAKE_PASSWORD = os.environ.get("SNOWFLAKE_PASSWORD")
@@ -28,7 +28,7 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 S3_BUCKET = os.environ.get("S3_BUCKET", "pritham-heartdata")
 S3_PREFIX = os.environ.get("S3_PREFIX", "heart_disease_uci.csv")
 
-# Validate required variables
+# Validation
 required_vars = {
     "SNOWFLAKE_ACCOUNT": SNOWFLAKE_ACCOUNT,
     "SNOWFLAKE_USER": SNOWFLAKE_USER,
@@ -60,7 +60,7 @@ def main():
     print("=" * 60)
     
     try:
-        # Connect to Snowflake
+        #Snowflake Connection
         print(f"\nConnecting to Snowflake account: {SNOWFLAKE_ACCOUNT}")
         conn = snowflake.connector.connect(
             account=SNOWFLAKE_ACCOUNT,
@@ -73,12 +73,11 @@ def main():
         cursor = conn.cursor()
         print("✓ Connected to Snowflake")
         
-        # Set context
         execute_sql(cursor, f"USE WAREHOUSE {SNOWFLAKE_WAREHOUSE};", "Set warehouse")
         execute_sql(cursor, f"USE DATABASE {SNOWFLAKE_DATABASE};", "Set database")
         execute_sql(cursor, f"USE SCHEMA {SNOWFLAKE_SCHEMA};", "Set schema")
         
-        # Create stage
+        #Stage creation
         create_stage_sql = f"""
         CREATE STAGE IF NOT EXISTS healthstage
             URL = 's3://{S3_BUCKET}'
@@ -89,7 +88,7 @@ def main():
         """
         execute_sql(cursor, create_stage_sql, "Create/verify S3 stage")
         
-        # Create or replace table
+        #Table creation
         create_table_sql = """
         CREATE OR REPLACE TABLE raw_health (
             id INTEGER,
@@ -113,7 +112,7 @@ def main():
         """
         execute_sql(cursor, create_table_sql, "Create/replace raw_health table")
         
-        # Copy data from S3
+        #data extraction from S3
         copy_sql = f"""
         COPY INTO raw_health
         FROM '@healthstage/{S3_PREFIX}'
@@ -125,12 +124,10 @@ def main():
         """
         execute_sql(cursor, copy_sql, f"Copy data from S3 ({S3_PREFIX})")
         
-        # Verify row count
         cursor.execute("SELECT COUNT(*) FROM raw_health;")
         row_count = cursor.fetchone()[0]
         print(f"\n✓ Ingestion complete! Total rows in raw_health: {row_count}")
-        
-        # Close connection
+
         cursor.close()
         conn.close()
         print("\n" + "=" * 60)
