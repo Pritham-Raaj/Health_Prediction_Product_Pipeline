@@ -5,21 +5,18 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List, Dict, Optional
 from enum import Enum
 
-
 class ChestPainType(str, Enum):
     """Chest pain type categories"""
-    TA = "TA"  # Typical Angina
-    ATA = "ATA"  # Atypical Angina
-    NAP = "NAP"  # Non-Anginal Pain
-    ASY = "ASY"  # Asymptomatic
-
+    TA = "TA"  
+    ATA = "ATA" 
+    NAP = "NAP" 
+    ASY = "ASY" 
 
 class RestECGType(str, Enum):
     """Resting ECG categories"""
     NORMAL = "Normal"
     ST = "ST"
     LVH = "LVH"
-
 
 class PredictionInput(BaseModel):
     """Input schema for heart disease prediction"""
@@ -59,7 +56,6 @@ class PredictionInput(BaseModel):
             }
         }
 
-
 class PredictionOutput(BaseModel):
     """Output schema for heart disease prediction"""
     prediction: int = Field(..., description="Predicted class (0=No Disease, 1=Disease)")
@@ -68,12 +64,10 @@ class PredictionOutput(BaseModel):
     model_version: str = Field(..., description="Model version used for prediction")
     timestamp: str = Field(..., description="Prediction timestamp")
 
-
 class FeatureContribution(BaseModel):
     """Feature contribution for explainability"""
     feature: str
     contribution: float
-
 
 class ExplainabilityOutput(BaseModel):
     """Output schema for SHAP explainability"""
@@ -83,14 +77,12 @@ class ExplainabilityOutput(BaseModel):
     top_features: List[FeatureContribution] = Field(..., description="Top contributing features")
     base_value: float = Field(..., description="Expected model output")
 
-
 class HealthCheck(BaseModel):
     """Health check response"""
     status: str
     model_loaded: bool
     mlflow_connected: bool
     timestamp: str
-
 
 class BatchPredictionInput(BaseModel):
     """Input schema for batch predictions"""
@@ -116,7 +108,6 @@ class BatchPredictionInput(BaseModel):
                 ]
             }
         }
-
 
 class BatchPredictionOutput(BaseModel):
     """Output schema for batch predictions"""
