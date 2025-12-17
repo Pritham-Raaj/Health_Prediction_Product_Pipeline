@@ -29,32 +29,19 @@ python-dotenv==1.2.1
 # RECOMMENDED DEPENDENCIES (For full feature set)
 # =============================================================================
 
-# Model Explainability (OPTIONAL - for SHAP explanations)
+# Model Explainability (OPTIONAL)
 # Set ENABLE_SHAP=True in settings to use
 shap==0.49.1
 
-# Experiment Tracking (OPTIONAL - for MLflow tracking)
-# Highly recommended for tracking model experiments
+# Experiment Tracking 
 mlflow==2.19.0
 
 # =============================================================================
-# ETL & DATA WAREHOUSE (Required for data pipeline)
+# ETL & DATA WAREHOUSE (Data pipeline)
 # =============================================================================
 
 # Snowflake Connection (Required for DBT and data access)
 snowflake-connector-python==4.1.0
-
-# =============================================================================
-# OPTIONAL DEPENDENCIES (For advanced features)
-# =============================================================================
-
-# Monitoring and Drift Detection (OPTIONAL)
-# Set ENABLE_MONITORING=True in settings to use
-# Note: scipy is required by scikit-learn, so drift detection uses scipy.stats
-# evidently>=0.7.0  # OPTIONAL: Uncomment if you want full Evidently AI features
-
-# Metrics Collection (OPTIONAL - for Prometheus)
-# prometheus-client==0.21.0  # OPTIONAL: Uncomment if using Prometheus
 
 # =============================================================================
 # DEVELOPMENT & TESTING
