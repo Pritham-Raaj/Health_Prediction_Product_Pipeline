@@ -8,8 +8,6 @@ from datetime import datetime
 from loguru import logger
 import sys
 from pathlib import Path
-
-# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.schemas import (
@@ -23,7 +21,6 @@ from app.schemas import (
 from app.model_service import model_service
 from config.settings import settings
 
-# Configure logger
 logger.add(
     settings.LOG_FILE,
     rotation="10 MB",
@@ -31,7 +28,6 @@ logger.add(
     level=settings.LOG_LEVEL
 )
 
-# Create FastAPI app
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -40,7 +36,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -48,7 +43,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.on_event("startup")
 async def startup_event():
@@ -60,12 +54,10 @@ async def startup_event():
     else:
         logger.warning("Model service is not ready - check model files")
 
-
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on shutdown"""
     logger.info("Shutting down application")
-
 
 @app.get("/", tags=["Root"])
 async def root():
@@ -77,7 +69,6 @@ async def root():
         "docs": "/docs"
     }
 
-
 @app.get("/health", response_model=HealthCheck, tags=["Health"])
 async def health_check():
     """
@@ -87,8 +78,6 @@ async def health_check():
     """
     try:
         model_loaded = model_service.is_ready()
-
-        # Check MLflow connectivity (simplified)
         mlflow_connected = Path(settings.MLFLOW_TRACKING_URI).exists()
 
         return HealthCheck(
@@ -104,11 +93,10 @@ async def health_check():
             detail=f"Health check failed: {str(e)}"
         )
 
-
 @app.post("/predict", response_model=PredictionOutput, tags=["Predictions"])
 async def predict(input_data: PredictionInput):
     """
-    Make a single prediction for heart disease
+    Makes a single prediction for heart disease
 
     - **age**: Patient age in years
     - **sex**: Gender (0=Female, 1=Male)
@@ -129,13 +117,10 @@ async def predict(input_data: PredictionInput):
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Model service is not ready"
             )
-
-        # Make prediction
         prediction, probability = model_service.predict(input_data.dict())
 
-        # Determine risk level
+        # Determines risk level
         risk_level = model_service.get_risk_level(probability)
-
         logger.info(f"Prediction made: {prediction} (probability: {probability:.4f})")
 
         return PredictionOutput(
@@ -155,12 +140,10 @@ async def predict(input_data: PredictionInput):
             detail=f"Prediction failed: {str(e)}"
         )
 
-
 @app.post("/predict/batch", response_model=BatchPredictionOutput, tags=["Predictions"])
 async def predict_batch(batch_input: BatchPredictionInput):
     """
-    Make predictions for multiple patients
-
+    Makes predictions for multiple patients
     Accepts a list of patient data and returns predictions for all
     """
     try:
@@ -203,15 +186,12 @@ async def predict_batch(batch_input: BatchPredictionInput):
             detail=f"Batch prediction failed: {str(e)}"
         )
 
-
 @app.post("/explain", response_model=ExplainabilityOutput, tags=["Explainability"])
 async def explain(input_data: PredictionInput):
     """
-    Get SHAP explanation for a prediction
-
+    Gets SHAP explanation for a prediction
     Returns the prediction along with SHAP values showing feature contributions
-
-    Note: This endpoint requires SHAP to be enabled in settings (ENABLE_SHAP=True)
+    The endpoint SHAP can be enabled/disabled in settings (ENABLE_SHAP=True)
     """
     try:
         if not settings.ENABLE_SHAP:
@@ -231,12 +211,8 @@ async def explain(input_data: PredictionInput):
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="SHAP explainer is not initialized. Check logs for details."
             )
-
-        # Get explanation
         explanation = model_service.explain_prediction(input_data.dict())
-
         logger.info(f"Explanation generated for prediction: {explanation['prediction']}")
-
         return ExplainabilityOutput(**explanation)
 
     except HTTPException:
@@ -247,7 +223,6 @@ async def explain(input_data: PredictionInput):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Explanation failed: {str(e)}"
         )
-
 
 if __name__ == "__main__":
     import uvicorn
