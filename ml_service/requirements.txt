@@ -1,5 +1,5 @@
 # =============================================================================
-# CORE DEPENDENCIES (Required for basic functionality)
+# CORE DEPENDENCIES ( For basic functionality)
 # =============================================================================
 
 # FastAPI and Web Framework
@@ -26,7 +26,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
 
 # =============================================================================
-# RECOMMENDED DEPENDENCIES (For full feature set)
+# RECOMMENDED DEPENDENCIES 
 # =============================================================================
 
 # Model Explainability (OPTIONAL)
