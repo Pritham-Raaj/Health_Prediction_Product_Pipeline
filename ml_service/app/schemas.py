@@ -81,7 +81,6 @@ class HealthCheck(BaseModel):
     """Health check response"""
     status: str
     model_loaded: bool
-    mlflow_connected: bool
     timestamp: str
 
 class BatchPredictionInput(BaseModel):
