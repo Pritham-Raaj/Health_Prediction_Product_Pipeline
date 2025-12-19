@@ -9,7 +9,7 @@ A production-ready machine learning system that demonstrates modern data enginee
 This project demonstrates a **complete ML lifecycle**:
 
 1. **ETL Pipeline** - DBT + Snowflake for data transformation
-2. **Model Training** - Scikit-learn with MLflow experiment tracking
+2. **Model Training** - Scikit-learn with MLflow experiment tracking for developing models locally
 3. **Production Deployment** - FastAPI REST API with Docker containerization
 
 ### Key Technologies
@@ -19,7 +19,7 @@ This project demonstrates a **complete ML lifecycle**:
 | **Data Warehouse** | Snowflake |
 | **ETL/Transform** | DBT (Data Build Tool) |
 | **ML Framework** | Scikit-learn |
-| **Experiment Tracking** | MLflow |
+| **Experiment Tracking** | MLflow (locally) |
 | **API Framework** | FastAPI |
 | **Containerization** | Docker |
 | **Production** | Render (Cloud Platform) |
@@ -39,7 +39,7 @@ This project demonstrates a **complete ML lifecycle**:
     └────┬────┘
          │
     ┌────▼────────────┐
-    │ ML Training     │  ← Model Training with MLflow
+    │ ML Training     │  ← Model Training with MLflow(locally)
     │ (scikit-learn)  │
     └────┬────────────┘
          │
@@ -112,7 +112,6 @@ python scripts/train_model_mlflow.py
 
 **Output:**
 - Model artifacts saved to `ml_service/models/`
-- Experiment metrics tracked in `mlflow_tracking/`
 - Best model: Logistic Regression (80.41% accuracy)
 
 ### 4. Start ML Service
@@ -169,7 +168,6 @@ Health_Prediction/
 │   └── requirements.txt
 ├── scripts/
 │   └── train_model_mlflow.py  # Model training script
-├── mlflow_tracking/           # MLflow experiment data
 ├── docker-compose.yml         # Docker orchestration
 ├── Dockerfile                 # Container definition
 └── README.md
@@ -200,19 +198,18 @@ SELECT * FROM cleaned_data
 ```
 
 **Benefits:**
-- Version-controlled SQL transformations
+- Version-controlled SQL transformations and access control
 - Data quality tests
 - Incremental processing
 - Documentation generation
 
 ### 2. Model Training with MLflow
 
-**Tracks:**
+**Tracks(locally):**
 - Model hyperparameters
 - Performance metrics (accuracy, precision, recall, F1, ROC-AUC)
 - Training artifacts
 - Model versioning
-
 
 
 ### 3. Production API (FastAPI)
