@@ -73,15 +73,13 @@ async def root():
 async def health_check():
     """
     Health check endpoint
-
-    Returns system health status including model and MLflow connectivity
+    Returns system health status
     """
     try:
         model_loaded = model_service.is_ready()
         return HealthCheck(
             status="healthy" if model_loaded else "degraded",
             model_loaded=model_loaded,
-            mlflow_connected=mlflow_connected,
             timestamp=datetime.utcnow().isoformat()
         )
     except Exception as e:
