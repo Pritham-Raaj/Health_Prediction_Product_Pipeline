@@ -140,8 +140,8 @@ docker-compose up --build
 ### 5. Test the API
 
 Access the interactive documentation:
-- **Swagger UI**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
+- **Swagger UI**: https://health-prediction-8l4d.onrender.com/docs
+- **Health Check**: https://health-prediction-8l4d.onrender.com/health
 
 
 
@@ -262,7 +262,7 @@ SELECT * FROM cleaned_data
 
 ### Health Check
 ```bash
-curl http://localhost:8000/health
+curl https://health-prediction-8l4d.onrender.com/health
 ```
 
 ### Prediction (High Risk)
@@ -303,11 +303,11 @@ curl http://localhost:8000/health
 
 ## 📚 Documentation
 
-- **API Docs**: http://localhost:8000/docs (Swagger UI)
+- **API Docs**: https://health-prediction-8l4d.onrender.com/docs (Swagger UI)
 - **DBT Docs**: Run `dbt docs generate && dbt docs serve`
-- **MLflow UI**: Run `mlflow ui` from `mlflow_tracking/` directory
 
 ---
+
 
 
 
