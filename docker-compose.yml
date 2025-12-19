@@ -16,15 +16,11 @@ services:
       - LOG_LEVEL=INFO
       # Optional features
       - ENABLE_SHAP=true
-      # MLflow tracking (optional but recommended)
-      - MLFLOW_TRACKING_URI=/app/mlflow_tracking
     volumes:
       # Model artifacts
       - ./ml_service/models:/app/ml_service/models
       # Logs directory
       - ./logs:/app/logs
-      # MLflow data (optional)
-      - ./mlflow_tracking:/app/mlflow_tracking
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
