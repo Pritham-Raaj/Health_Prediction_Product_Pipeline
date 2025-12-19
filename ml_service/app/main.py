@@ -78,8 +78,6 @@ async def health_check():
     """
     try:
         model_loaded = model_service.is_ready()
-        mlflow_connected = Path(settings.MLFLOW_TRACKING_URI).exists()
-
         return HealthCheck(
             status="healthy" if model_loaded else "degraded",
             model_loaded=model_loaded,
