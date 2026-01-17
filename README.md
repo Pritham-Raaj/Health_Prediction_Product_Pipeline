@@ -1,32 +1,29 @@
 # Heart Disease Prediction: End-to-End ML Pipeline
 
-> **Showcasing proficiency in ETL pipelines, model training, and production deployment**
-
 A production-ready machine learning system that demonstrates modern data engineering and MLOps practices through heart disease risk prediction.
 
-## 🎯 Project Overview
+# Project Overview
 
-This project demonstrates a **complete ML lifecycle**:
+This project demonstrates a complete ML lifecycle:
 
-1. **ETL Pipeline** - DBT + Snowflake for data transformation
-2. **Model Training** - Scikit-learn with MLflow experiment tracking for developing models locally
-3. **Production Deployment** - FastAPI REST API with Docker containerization
+1. ETL Pipeline - DBT + Snowflake for data transformation
+2. Model Training - Scikit-learn with MLflow experiment tracking for developing models locally
+3. Production Deployment - FastAPI REST API with Docker containerization
 
-### Key Technologies
+# Key Technologies
 
 | Component | Technology |
-|-----------|-----------|
-| **Data Warehouse** | Snowflake |
-| **ETL/Transform** | DBT (Data Build Tool) |
-| **ML Framework** | Scikit-learn |
-| **Experiment Tracking** | MLflow (locally) |
-| **API Framework** | FastAPI |
-| **Containerization** | Docker |
-| **Production** | Render (Cloud Platform) |
+| Data Warehouse | Snowflake |
+| ETL/Transform | DBT (Data Build Tool) |
+| ML Framework | Scikit-learn |
+| Experiment Tracking | MLflow (locally) |
+| API Framework | FastAPI |
+| Containerization | Docker |
+| Production | Render (Cloud Platform) |
 
 ---
 
-## 📊 Architecture
+# Architecture
 
 ```
 ┌─────────────────┐
@@ -62,22 +59,22 @@ This project demonstrates a **complete ML lifecycle**:
 
 ---
 
-## 🚀 Quick Start
+# Quick Start
 
-### Prerequisites
+# Prerequisites
 
 - Python 3.11+
 - Snowflake account (for ETL pipeline)
 - Docker (optional, for containerization)
 
-### 1. Clone and Setup
+# 1. Clone and Setup
 
 ```bash
 git clone <repository-url>
 cd Health_Prediction
 ```
 
-### 2. Run ETL Pipeline (DBT + Snowflake)
+# 2. Run ETL Pipeline (DBT + Snowflake)
 
 ```bash
 # Navigate to DBT project
@@ -97,7 +94,7 @@ This creates:
 - `analytics.heart_curated` - Cleaned dataset (739 records)
 - `analytics.heart_features` - Engineered features for ML
 
-### 3. Train ML Model
+# 3. Train ML Model
 
 ```bash
 # From project root
@@ -110,41 +107,31 @@ pip install -r ml_service/requirements.txt
 python scripts/train_model_mlflow.py
 ```
 
-**Output:**
+Output:
 - Model artifacts saved to `ml_service/models/`
 - Best model: Logistic Regression (80.41% accuracy)
 
-### 4. Start ML Service
+# 4. Start ML Service
 
-**Option A: Using Quickstart Script (Easiest)**
-```bash
-# Windows
-.\quickstart.bat
-
-# Linux/Mac
-./quickstart.sh
-```
-
-**Option B: Manual Start**
 ```bash
 cd ml_service
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**Option C: Docker**
+OR: Docker
 ```bash
 docker-compose up --build
 ```
 
-### 5. Test the API
+# 5. Test the API
 
 Access the interactive documentation:
-- **Swagger UI**: https://health-prediction-8l4d.onrender.com/docs
-- **Health Check**: https://health-prediction-8l4d.onrender.com/health
+- Swagger UI: https://health-prediction-8l4d.onrender.com/docs
+- Health Check: https://health-prediction-8l4d.onrender.com/health
 
 
 
-## 📁 Project Structure
+# Project Structure
 
 ```
 Health_Prediction/
@@ -175,11 +162,11 @@ Health_Prediction/
 
 ---
 
-## 🎓 Technical Highlights
+# Technical Highlights
 
-### 1. ETL Pipeline (DBT + Snowflake)
+# 1. ETL Pipeline (DBT + Snowflake)
 
-**Data Transformation:**
+Data Transformation:
 ```sql
 -- Example: heart_curated.sql
 WITH cleaned_data AS (
@@ -197,38 +184,38 @@ WITH cleaned_data AS (
 SELECT * FROM cleaned_data
 ```
 
-**Benefits:**
+Benefits:
 - Version-controlled SQL transformations and access control
 - Data quality tests
 - Incremental processing
 - Documentation generation
 
-### 2. Model Training with MLflow
+# 2. Model Training with MLflow
 
-**Tracks(locally):**
+Tracks(locally):
 - Model hyperparameters
 - Performance metrics (accuracy, precision, recall, F1, ROC-AUC)
 - Training artifacts
 - Model versioning
 
 
-### 3. Production API (FastAPI)
+# 3. Production API (FastAPI)
 
-**Core Endpoints:**
+Core Endpoints:
 - `POST /predict` - Single patient prediction
 - `POST /predict/batch` - Multiple predictions
 - `POST /explain` - SHAP-based model explanations
 - `GET /health` - Service health check
 
-**Features:**
+Features:
 - Automatic API documentation
 - Error handling
 - Structured logging
 - Health monitoring
 
-### 4. Containerization & Deployment
+# 4. Containerization & Deployment
 
-**Docker Features:**
+Docker Features:
 - Multi-stage builds for optimized size
 - Health checks
 - Volume mounts for persistence
@@ -236,18 +223,17 @@ SELECT * FROM cleaned_data
 
 ---
 
-## 📊 Model Performance
+# Model Performance
 
 | Metric | Value |
-|--------|-------|
-| **Algorithm** | Logistic Regression |
-| **Accuracy** | 80.41% |
-| **Precision** | 81.58% |
-| **Recall** | 80.52% |
-| **F1 Score** | 81.05% |
-| **ROC-AUC** | 88.95% |
+| Algorithm | Logistic Regression |
+| Accuracy | 80.41% |
+| Precision | 81.58% |
+| Recall | 80.52% |
+| F1 Score | 81.05% |
+| ROC-AUC | 88.95% |
 
-**Dataset:**
+Dataset:
 - 739 patient records
 - 11 features (age, sex, cholesterol, blood pressure, etc.)
 - Binary classification (heart disease: yes/no)
@@ -255,14 +241,14 @@ SELECT * FROM cleaned_data
 
 ---
 
-## 🧪 API Examples
+# API Examples
 
-### Health Check
+# Health Check
 ```bash
 curl https://health-prediction-8l4d.onrender.com/health
 ```
 
-### Prediction (High Risk)
+# Prediction (High Risk)
 ```json
 {
   "age": 65,
@@ -279,7 +265,7 @@ curl https://health-prediction-8l4d.onrender.com/health
 }
 ```
 
-### Prediction (Low Risk)
+# Prediction (Low Risk)
 ```json
 {
   "age": 30,
@@ -298,7 +284,7 @@ curl https://health-prediction-8l4d.onrender.com/health
 
 ---
 
-## 📚 Documentation
+# Documentation
 
 - **API Docs**: https://health-prediction-8l4d.onrender.com/docs (Swagger UI)
 - **DBT Docs**: Run `dbt docs generate && dbt docs serve`
@@ -308,7 +294,7 @@ curl https://health-prediction-8l4d.onrender.com/health
 
 
 
-## 🙏 Acknowledgments
+# Acknowledgments
 
 - Dataset: UCI Machine Learning Repository
 - Frameworks: FastAPI, MLflow, DBT
